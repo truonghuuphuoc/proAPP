@@ -24,30 +24,37 @@ namespace appTARGET
 
 
 
-        byte mRf_IsStartFrame  = 0;
-        byte mRf_IsEndFrame    = 0;
-        byte mRf_IsFisrtNibble = 0;
+        private byte mRf_IsStartFrame  = 0;
+        private byte mRf_IsEndFrame    = 0;
+        private byte mRf_IsFisrtNibble = 0;
 
-        byte mRf_CurrentByte   = 0;
-        byte mRf_IsMessageRecv = 0;
+        private byte mRf_CurrentByte   = 0;
+        private byte mRf_IsMessageRecv = 0;
 
 
-        byte [] mRf_MessageData = new byte[MESG_BUFFER_SIZE];
-        UInt16  mRf_DataPosition = 0;
+        private byte mRf_StartAddress       = 0;
+        private byte mRf_DestinationAddress = 0;
+
+
+        private byte[] mRf_MessageData = new byte[MESG_BUFFER_SIZE];
+        private UInt16 mRf_DataPosition = 0;
 
         public phnRfReceiveDelegate mRfReceiveEvent;
 
 
-        public int phnRfReceive_IntializePort(string rfSerialCom)
+        public int phnRfReceive_IntializePort(string rfSerialCom, byte startAddress, byte desAddress)
         {
             try
             {
-                mRfSerialPort           = new System.IO.Ports.SerialPort();
-                mRfSerialPort.PortName  = rfSerialCom;
-                mRfSerialPort.BaudRate  = 9600;
-                mRfSerialPort.DataBits  = 8;
-                mRfSerialPort.StopBits  = System.IO.Ports.StopBits.One;
-                mRfSerialPort.Parity    = System.IO.Ports.Parity.None;
+                mRf_StartAddress = startAddress;
+                mRf_DestinationAddress = desAddress;
+
+                mRfSerialPort = new System.IO.Ports.SerialPort();
+                mRfSerialPort.PortName = rfSerialCom;
+                mRfSerialPort.BaudRate = 9600;
+                mRfSerialPort.DataBits = 8;
+                mRfSerialPort.StopBits = System.IO.Ports.StopBits.One;
+                mRfSerialPort.Parity = System.IO.Ports.Parity.None;
 
                 mRfSerialPort.Open();
 
@@ -75,7 +82,7 @@ namespace appTARGET
 
             int index = 0;
             while (true)
-            { 
+            {
                 phnMessage.phnMessage_GetMessageFormat(dataCommand, (UInt16)dataCommand.Length, ref dataSend, ref sendLength);
 
 
@@ -95,6 +102,8 @@ namespace appTARGET
                 }
 
                 mRf_IsMessageRecv = 0;
+
+                mRfReceiveEvent(MessageType.TYPE_CONTROL_1, index);
 
                 Thread.Sleep(1000);
             }
