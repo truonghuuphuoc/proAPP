@@ -41,9 +41,15 @@ namespace appTARGET
 
         public phnRfReceiveDelegate mRfReceiveEvent;
 
+        private byte mBia;
+        private byte mValue;
+        private byte mStatus;
+
 
         public int phnRfReceive_IntializePort(string rfSerialCom, byte startAddress, byte desAddress)
         {
+            this.mStatus = 0;
+
             try
             {
                 mRf_StartAddress = startAddress;
@@ -74,38 +80,106 @@ namespace appTARGET
             return 0;
         }
 
+        public void updateValue(byte _bia, byte _value)
+        {
+            this.mBia = _bia;
+            this.mValue = _value;
+            this.mStatus = 1;
+        }
+
         private void phnRfReceive_ReadWriteThread()
         {
-            byte[] dataSend = new byte[MESG_BUFFER_SIZE];
-            byte[] dataCommand = new byte[] { 0x1E, 0x2D, 0x3C, 0x4B, 0x5A, 0x69, 0x78, 0x87, 0x96, 0xA5, 0xB4, 0xC3, 0xD2, 0xE1 };
-            UInt16 sendLength = 0;
+            byte[] recv  = new byte[2];
 
-            int index = 0;
+            byte[] dataSend = new byte[MESG_BUFFER_SIZE];
+            byte[] messSend = new byte[MESG_BUFFER_SIZE];
+            UInt16 messLength = 0;
+
             while (true)
             {
-                phnMessage.phnMessage_GetMessageFormat(dataCommand, (UInt16)dataCommand.Length, ref dataSend, ref sendLength);
-
-
-                phnRfReceive_SendMessage(dataSend, sendLength);
-
-                phRfReceive_ReceiveMessage();
-
-                if (mRf_IsMessageRecv == 1)
+                if(mRfSerialPort.IsOpen && mRfSerialPort.BytesToRead > 0)
                 {
-                    index++;
-                    mRfReceiveEvent(MessageType.TYPE_CONTROL_1, index);
+                    mRfSerialPort.Read(recv, 0, 1);
+
+                    phnRfReceive_MessageHandler(recv[0]);
+
                 }
                 else
                 {
-                    index = 0;
-                    mRfReceiveEvent(MessageType.TYPE_CONTROL_1, index);
+                    Thread.Sleep(100);
+                }
+
+                if (mRf_IsMessageRecv == 0)
+                {
+                    continue;
                 }
 
                 mRf_IsMessageRecv = 0;
 
-                mRfReceiveEvent(MessageType.TYPE_CONTROL_1, index);
+                dataSend[0] = mRf_MessageData[1];
 
-                Thread.Sleep(1000);
+                //set its address
+                dataSend[1] = mRf_MessageData[0];
+
+                //set ACK
+                dataSend[2] = mRf_MessageData[2];
+
+                if(mStatus == 1)
+                {
+                    switch(mBia)
+                    {
+                        case 0:
+                            //set value of slave 1
+                            dataSend[3] = mValue;
+
+                            //set value of slave 2
+                            dataSend[4] = 0xFF;
+
+                            //set value of slave 3
+                            dataSend[5] = 0xFF;
+                            break;
+
+                        case 1:
+                            //set value of slave 1
+                            dataSend[3] = 0xFF;
+
+                            //set value of slave 2
+                            dataSend[4] = mValue;
+
+                            //set value of slave 3
+                            dataSend[5] = 0xFF;
+                            break;
+
+                        default:
+                            //set value of slave 1
+                            dataSend[3] = 0xFF;
+
+                            //set value of slave 2
+                            dataSend[4] = 0xFF;
+
+                            //set value of slave 3
+                            dataSend[5] = mValue;
+                            break;
+                    }
+
+                }
+                else
+                {
+                    //set value of slave 1
+                    dataSend[3] = 0xFF;
+
+                    //set value of slave 2
+                    dataSend[4] = 0xFF;
+
+                    //set value of slave 3
+                    dataSend[5] = 0xFF;
+                }
+
+                mStatus = 0;
+
+                //send message reponse to host
+                phnMessage.phnMessage_GetMessageFormat(dataSend, 6, ref messSend, ref messLength);
+                phnRfReceive_SendMessage(messSend, messLength);
             }
         }
 
