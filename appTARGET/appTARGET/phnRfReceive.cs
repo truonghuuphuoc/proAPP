@@ -41,14 +41,12 @@ namespace appTARGET
 
         public phnRfReceiveDelegate mRfReceiveEvent;
 
-        private byte mBia;
-        private byte mValue;
-        private byte mStatus;
 
+        private Queue<phnEvent> mEvent = new Queue<phnEvent>();
 
         public int phnRfReceive_IntializePort(string rfSerialCom, byte startAddress, byte desAddress)
         {
-            this.mStatus = 0;
+            
 
             try
             {
@@ -80,11 +78,9 @@ namespace appTARGET
             return 0;
         }
 
-        public void updateValue(byte _bia, byte _value)
+        public void updateValue(byte _be, byte _bia, byte _value)
         {
-            this.mBia = _bia;
-            this.mValue = _value;
-            this.mStatus = 1;
+            mEvent.Enqueue(new phnEvent(_be, _bia, _value));
         }
 
         private void phnRfReceive_ReadWriteThread()
@@ -124,47 +120,329 @@ namespace appTARGET
                 //set ACK
                 dataSend[2] = mRf_MessageData[2];
 
-                if(mStatus == 1)
+                if(mEvent.Count > 0)
                 {
-                    switch(mBia)
+                    phnEvent _event = mEvent.Dequeue();
+
+                    if(_event.Be == 0)
                     {
-                        case 0:
-                            //set value of slave 1
-                            dataSend[3] = mValue;
+                        switch (_event.Bia)
+                        {
+                            case 0:
+                                //set value of slave 1
+                                dataSend[3] = _event.Diem;
 
-                            //set value of slave 2
-                            dataSend[4] = 0xFF;
+                                //set value of slave 2
+                                dataSend[4] = 0xFF;
 
-                            //set value of slave 3
-                            dataSend[5] = 0xFF;
-                            break;
+                                //set value of slave 3
+                                dataSend[5] = 0xFF;
 
-                        case 1:
-                            //set value of slave 1
-                            dataSend[3] = 0xFF;
+                                /******* BE 2 ******/
 
-                            //set value of slave 2
-                            dataSend[4] = mValue;
+                                //set value of slave 4
+                                dataSend[6] = 0xFF;
 
-                            //set value of slave 3
-                            dataSend[5] = 0xFF;
-                            break;
+                                //set value of slave 5
+                                dataSend[7] = 0xFF;
 
-                        default:
-                            //set value of slave 1
-                            dataSend[3] = 0xFF;
+                                //set value of slave 6
+                                dataSend[8] = 0xFF;
 
-                            //set value of slave 2
-                            dataSend[4] = 0xFF;
+                                /******* BE 3 ******/
 
-                            //set value of slave 3
-                            dataSend[5] = mValue;
-                            break;
+                                //set value of slave 7
+                                dataSend[9] = 0xFF;
+
+                                //set value of slave 8
+                                dataSend[10] = 0xFF;
+
+                                //set value of slave 9
+                                dataSend[11] = 0xFF;
+                                break;
+
+                            case 1:
+                                //set value of slave 1
+                                dataSend[3] = 0xFF;
+
+                                //set value of slave 2
+                                dataSend[4] = _event.Diem;
+
+                                //set value of slave 3
+                                dataSend[5] = 0xFF;
+
+                                /******* BE 2 ******/
+
+                                //set value of slave 4
+                                dataSend[6] = 0xFF;
+
+                                //set value of slave 5
+                                dataSend[7] = 0xFF;
+
+                                //set value of slave 6
+                                dataSend[8] = 0xFF;
+
+                                /******* BE 3 ******/
+
+                                //set value of slave 7
+                                dataSend[9] = 0xFF;
+
+                                //set value of slave 8
+                                dataSend[10] = 0xFF;
+
+                                //set value of slave 9
+                                dataSend[11] = 0xFF;
+                                break;
+
+                            default:
+                                //set value of slave 1
+                                dataSend[3] = 0xFF;
+
+                                //set value of slave 2
+                                dataSend[4] = 0xFF;
+
+                                //set value of slave 3
+                                dataSend[5] = _event.Diem;
+
+                                /******* BE 2 ******/
+
+                                //set value of slave 4
+                                dataSend[6] = 0xFF;
+
+                                //set value of slave 5
+                                dataSend[7] = 0xFF;
+
+                                //set value of slave 6
+                                dataSend[8] = 0xFF;
+
+                                /******* BE 3 ******/
+
+                                //set value of slave 7
+                                dataSend[9] = 0xFF;
+
+                                //set value of slave 8
+                                dataSend[10] = 0xFF;
+
+                                //set value of slave 9
+                                dataSend[11] = 0xFF;
+                                break;
+                        }
+                    }
+                    else if(_event.Be == 1)
+                    {
+                        switch (_event.Bia)
+                        {
+                            case 0:
+                                //set value of slave 1
+                                dataSend[3] = 0xFF;
+
+                                //set value of slave 2
+                                dataSend[4] = 0xFF;
+
+                                //set value of slave 3
+                                dataSend[5] = 0xFF;
+
+                                /******* BE 2 ******/
+
+                                //set value of slave 4
+                                dataSend[6] = _event.Diem;
+
+                                //set value of slave 5
+                                dataSend[7] = 0xFF;
+
+                                //set value of slave 6
+                                dataSend[8] = 0xFF;
+
+                                /******* BE 3 ******/
+
+                                //set value of slave 7
+                                dataSend[9] = 0xFF;
+
+                                //set value of slave 8
+                                dataSend[10] = 0xFF;
+
+                                //set value of slave 9
+                                dataSend[11] = 0xFF;
+                                break;
+
+                            case 1:
+                                //set value of slave 1
+                                dataSend[3] = 0xFF;
+
+                                //set value of slave 2
+                                dataSend[4] = 0xFF;
+
+                                //set value of slave 3
+                                dataSend[5] = 0xFF;
+
+                                /******* BE 2 ******/
+
+                                //set value of slave 4
+                                dataSend[6] = 0xFF;
+
+                                //set value of slave 5
+                                dataSend[7] = _event.Diem;
+
+                                //set value of slave 6
+                                dataSend[8] = 0xFF;
+
+                                /******* BE 3 ******/
+
+                                //set value of slave 7
+                                dataSend[9] = 0xFF;
+
+                                //set value of slave 8
+                                dataSend[10] = 0xFF;
+
+                                //set value of slave 9
+                                dataSend[11] = 0xFF;
+                                break;
+
+                            default:
+                                //set value of slave 1
+                                dataSend[3] = 0xFF;
+
+                                //set value of slave 2
+                                dataSend[4] = 0xFF;
+
+                                //set value of slave 3
+                                dataSend[5] = 0xFF;
+
+                                /******* BE 2 ******/
+
+                                //set value of slave 4
+                                dataSend[6] = 0xFF;
+
+                                //set value of slave 5
+                                dataSend[7] = 0xFF;
+
+                                //set value of slave 6
+                                dataSend[8] = _event.Diem;
+
+                                /******* BE 3 ******/
+
+                                //set value of slave 7
+                                dataSend[9] = 0xFF;
+
+                                //set value of slave 8
+                                dataSend[10] = 0xFF;
+
+                                //set value of slave 9
+                                dataSend[11] = 0xFF;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        switch (_event.Bia)
+                        {
+                            case 0:
+                                //set value of slave 1
+                                dataSend[3] = 0xFF;
+
+                                //set value of slave 2
+                                dataSend[4] = 0xFF;
+
+                                //set value of slave 3
+                                dataSend[5] = 0xFF;
+
+                                /******* BE 2 ******/
+
+                                //set value of slave 4
+                                dataSend[6] = 0xFF;
+
+                                //set value of slave 5
+                                dataSend[7] = 0xFF;
+
+                                //set value of slave 6
+                                dataSend[8] = 0xFF;
+
+                                /******* BE 3 ******/
+
+                                //set value of slave 7
+                                dataSend[9] = _event.Diem;
+
+                                //set value of slave 8
+                                dataSend[10] = 0xFF;
+
+                                //set value of slave 9
+                                dataSend[11] = 0xFF;
+                                break;
+
+                            case 1:
+                                //set value of slave 1
+                                dataSend[3] = 0xFF;
+
+                                //set value of slave 2
+                                dataSend[4] = 0xFF;
+
+                                //set value of slave 3
+                                dataSend[5] = 0xFF;
+
+                                /******* BE 2 ******/
+
+                                //set value of slave 4
+                                dataSend[6] = 0xFF;
+
+                                //set value of slave 5
+                                dataSend[7] = 0xFF;
+
+                                //set value of slave 6
+                                dataSend[8] = 0xFF;
+
+                                /******* BE 3 ******/
+
+                                //set value of slave 7
+                                dataSend[9] = 0xFF;
+
+                                //set value of slave 8
+                                dataSend[10] = _event.Diem;
+
+                                //set value of slave 9
+                                dataSend[11] = 0xFF;
+                                break;
+
+                            default:
+                                //set value of slave 1
+                                dataSend[3] = 0xFF;
+
+                                //set value of slave 2
+                                dataSend[4] = 0xFF;
+
+                                //set value of slave 3
+                                dataSend[5] = 0xFF;
+
+                                /******* BE 2 ******/
+
+                                //set value of slave 4
+                                dataSend[6] = 0xFF;
+
+                                //set value of slave 5
+                                dataSend[7] = 0xFF;
+
+                                //set value of slave 6
+                                dataSend[8] = 0xFF;
+
+                                /******* BE 3 ******/
+
+                                //set value of slave 7
+                                dataSend[9] = 0xFF;
+
+                                //set value of slave 8
+                                dataSend[10] = 0xFF;
+
+                                //set value of slave 9
+                                dataSend[11] = _event.Diem;
+                                break;
+                        }
                     }
 
                 }
                 else
                 {
+
+                    /******* BE 1 ******/
+
                     //set value of slave 1
                     dataSend[3] = 0xFF;
 
@@ -173,12 +451,34 @@ namespace appTARGET
 
                     //set value of slave 3
                     dataSend[5] = 0xFF;
+
+
+                    /******* BE 2 ******/
+
+                    //set value of slave 4
+                    dataSend[6] = 0xFF;
+
+                    //set value of slave 5
+                    dataSend[7] = 0xFF;
+
+                    //set value of slave 6
+                    dataSend[8] = 0xFF;
+
+                    /******* BE 3 ******/
+
+                    //set value of slave 7
+                    dataSend[9] = 0xFF;
+
+                    //set value of slave 8
+                    dataSend[10] = 0xFF;
+
+                    //set value of slave 9
+                    dataSend[11] = 0xFF;
                 }
 
-                mStatus = 0;
 
                 //send message reponse to host
-                phnMessage.phnMessage_GetMessageFormat(dataSend, 6, ref messSend, ref messLength);
+                phnMessage.phnMessage_GetMessageFormat(dataSend, 12, ref messSend, ref messLength);
                 phnRfReceive_SendMessage(messSend, messLength);
             }
         }

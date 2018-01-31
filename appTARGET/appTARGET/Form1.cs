@@ -19,52 +19,52 @@ namespace appTARGET
 
         private void button1_Click(object sender, EventArgs e)
         {
-            this.mRfReceive.updateValue((byte)mBia.SelectedIndex, 1);
+            this.mRfReceive.updateValue((byte) mBe.SelectedIndex, (byte)mBia.SelectedIndex, 1);
         }
 
         private void button10_Click(object sender, EventArgs e)
         {
-            this.mRfReceive.updateValue((byte)mBia.SelectedIndex, 6);
+            this.mRfReceive.updateValue((byte) mBe.SelectedIndex, (byte)mBia.SelectedIndex, 6);
         }
 
         private void button9_Click(object sender, EventArgs e)
         {
-            this.mRfReceive.updateValue((byte)mBia.SelectedIndex, 7);
+            this.mRfReceive.updateValue((byte) mBe.SelectedIndex, (byte)mBia.SelectedIndex, 7);
         }
 
         private void button8_Click(object sender, EventArgs e)
         {
-            this.mRfReceive.updateValue((byte)mBia.SelectedIndex, 8);
+            this.mRfReceive.updateValue((byte) mBe.SelectedIndex, (byte)mBia.SelectedIndex, 8);
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
-            this.mRfReceive.updateValue((byte)mBia.SelectedIndex, 9);
+            this.mRfReceive.updateValue((byte) mBe.SelectedIndex, (byte)mBia.SelectedIndex, 9);
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
-            this.mRfReceive.updateValue((byte)mBia.SelectedIndex, 10);
+            this.mRfReceive.updateValue((byte) mBe.SelectedIndex, (byte)mBia.SelectedIndex, 10);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            this.mRfReceive.updateValue((byte)mBia.SelectedIndex, 2);
+            this.mRfReceive.updateValue((byte) mBe.SelectedIndex, (byte)mBia.SelectedIndex, 2);
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            this.mRfReceive.updateValue((byte)mBia.SelectedIndex, 3);
+            this.mRfReceive.updateValue((byte) mBe.SelectedIndex, (byte)mBia.SelectedIndex, 3);
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            this.mRfReceive.updateValue((byte)mBia.SelectedIndex, 4);
+            this.mRfReceive.updateValue((byte) mBe.SelectedIndex, (byte)mBia.SelectedIndex, 4);
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            this.mRfReceive.updateValue((byte)mBia.SelectedIndex, 5);
+            this.mRfReceive.updateValue((byte) mBe.SelectedIndex, (byte)mBia.SelectedIndex, 5);
         }
     }
 }

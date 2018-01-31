@@ -52,6 +52,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="phnEvent.cs" />
     <Compile Include="phnMessage.cs" />
     <Compile Include="phnRfReceive.cs" />
     <Compile Include="phnSysConfig.cs" />

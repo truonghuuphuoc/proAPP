@@ -46,6 +46,7 @@ namespace appTARGET
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
+            this.mBe = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // mBia
@@ -56,7 +57,7 @@ namespace appTARGET
             "Bia so 4",
             "Bia so 7",
             "Bia so 8"});
-            this.mBia.Location = new System.Drawing.Point(55, 128);
+            this.mBia.Location = new System.Drawing.Point(55, 138);
             this.mBia.Name = "mBia";
             this.mBia.Size = new System.Drawing.Size(310, 24);
             this.mBia.TabIndex = 0;
@@ -161,11 +162,25 @@ namespace appTARGET
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
+            // mBe
+            // 
+            this.mBe.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.mBe.FormattingEnabled = true;
+            this.mBe.Items.AddRange(new object[] {
+            "Be 1",
+            "Be 2",
+            "Be 3"});
+            this.mBe.Location = new System.Drawing.Point(55, 98);
+            this.mBe.Name = "mBe";
+            this.mBe.Size = new System.Drawing.Size(310, 24);
+            this.mBe.TabIndex = 11;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(449, 488);
+            this.Controls.Add(this.mBe);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
@@ -194,6 +209,7 @@ namespace appTARGET
             phnSysConfig.phnReadConfig();
 
             this.mBia.SelectedIndex = 0;
+            this.mBe.SelectedIndex = 0;
 
             Thread InitDeviceThread = new Thread(new ThreadStart(InitDevice));
             InitDeviceThread.IsBackground = true;
@@ -253,6 +269,7 @@ namespace appTARGET
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.ComboBox mBe;
     }
 }
 
